@@ -14,3 +14,31 @@
 1. **Clone the repository:**
    ```bash
    git clone <repository-url> - "https://github.com/Iysah/videoverse-interview"
+
+
+## Running Frontend
+cd frontend
+
+npm install
+# or
+yarn install
+
+
+npm run dev
+# or
+yarn dev
+
+
+## Running Backend
+
+cd backend
+
+npm install
+# or
+yarn install
+
+
+npm run dev
+# or
+yarn dev
+
