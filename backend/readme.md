@@ -24,3 +24,14 @@ This project provides a backend API service built with Express.js and TypeScript
 ### Prerequisites
 - Node.js (>=12.x)
 - npm or yarn
+
+
+backend/
+├── src/
+│   ├── controllers/   # Contains API endpoint logic
+│   ├── models/        # Notification data models
+│   ├── routes/        # Express routes definitions
+│   ├── services/      # Business logic and utilities
+│   └── app.ts         # Express app configuration
+├── tsconfig.json      # TypeScript configuration
+└── package.json       # Project metadata and dependencies
