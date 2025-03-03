@@ -11,7 +11,7 @@ yarn dev
 
 
 frontend/
-├── pages/            # Next.js pages
+├── app/              # Next.js pages
 ├── components/       # Reusable React components
 ├── styles/           # Tailwind CSS configurations and styles
 └── public/           # Static assets

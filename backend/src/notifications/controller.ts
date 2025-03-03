@@ -31,7 +31,7 @@ const Notifications = [
         description: "David posted a new article",
         time: "2 minutes ago",
         type: "post",
-        seen: true,
+        seen: false,
     },
     {
         id: 5,
@@ -97,4 +97,31 @@ export const getNotifications = async (
       console.error(error);
       return res.status(500).json({ message: 'Internal server error' });
     }
-  };
+};
+
+export const updateNatificationStatus = async (
+    req: Request,
+    res: Response,
+  )=> {
+  
+    try {
+    const id: any = req.body.id 
+    const newSeenStatus = req.body.newSeenStatus
+    
+    const notification = Notifications.find(notification => notification.id === id);
+    if (notification) {
+        notification.seen = newSeenStatus;
+        return res
+        .status(201)
+        .json({ message: 'Notification read'});
+    }else{
+        return res
+        .status(201)
+        .json({ message: 'Unable to read notification'});
+    }
+    
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+};

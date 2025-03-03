@@ -32,6 +32,12 @@ export default function Home() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [open, setOpen] = useState<boolean>(false); // State to control Popover
+
+  // Handle notification click
+  const handleNotificationClick = (notification: Notification) => {
+    setOpen(false);
+  };
   
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -73,7 +79,7 @@ export default function Home() {
        <MessageCircleHeart />
       </div>
 
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <div className="flex justify-center items-center p-3 bg-gray-200 rounded-full">
             <Bell color="#3357e8" />
@@ -103,7 +109,7 @@ export default function Home() {
           </div>
 
           {notifications.map((notification) => (
-            <div key={notification?.id} className="flex justify-between items-center mt-2">
+            <div key={notification?.id} className="flex justify-between items-center mt-2.5 cursor-pointer" onClick={() => handleNotificationClick(notification)}>
               <div className="flex justify-center items-center gap-4">
                 <div className="flex justify-center items-center p-3 bg-gray-200 rounded-full">
                   {notification?.type === "message" ? (
@@ -126,14 +132,22 @@ export default function Home() {
                 <div>
                   <h3 className="text-[18px] font-bold">{notification.title}</h3>
                   <p>{notification.description}</p>
-                  <p>{notification.time}</p>
+                  <p className="text-[14px]">{notification.time}</p>
                 </div>
               </div>
-              <div className="w-2 h-2 rounded-full bg-blue-600" />
+              {notification.seen ? (
+                <div className="w-2 h-2 rounded-full bg-gray-400" />
+              ) : (
+                <div className="w-2 h-2 rounded-full bg-blue-600" />
+              )}
             </div>
           ))}
         </PopoverContent>
       </Popover>
+
+      <div className="flex justify-center items-center p-3 bg-gray-200 rounded-full">
+        <UserRound />
+      </div>
     </div>
   );
 }
