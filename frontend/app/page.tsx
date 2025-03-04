@@ -10,7 +10,7 @@ import { useEffect } from "react";
 
 // the notification interface based on API response
 interface Notification {
-  id: number;
+  _id: number;
   title: string;
   description: string;
   time: string;
@@ -109,7 +109,7 @@ export default function Home() {
           </div>
 
           {notifications.map((notification) => (
-            <div key={notification?.id} className="flex justify-between items-center mt-2.5 cursor-pointer" onClick={() => handleNotificationClick(notification)}>
+            <div key={notification?._id} className="flex justify-between items-center mt-2.5 cursor-pointer" onClick={() => handleNotificationClick(notification)}>
               <div className="flex justify-center items-center gap-4">
                 <div className="flex justify-center items-center p-3 bg-gray-200 rounded-full">
                   {notification?.type === "message" ? (
@@ -132,7 +132,11 @@ export default function Home() {
                 <div>
                   <h3 className="text-[18px] font-bold">{notification.title}</h3>
                   <p>{notification.description}</p>
-                  <p className="text-[14px]">{notification.time}</p>
+                  <p className="text-[14px]">{new Date(notification?.time).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}</p>
                 </div>
               </div>
               {notification.seen ? (

@@ -1,5 +1,5 @@
 import express from 'express'
-import { getNotifications } from "./controller";
+import { getNotifications, updateNatificationStatus } from "./controller";
 
 
 const router = express.Router()
@@ -9,5 +9,6 @@ router.get('/get-notifications', (req, res, next) => {
     getNotifications(req, res).catch(next);
 });
 
+router.post('/view-notification', updateNatificationStatus) 
 
 export default router

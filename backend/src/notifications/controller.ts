@@ -1,72 +1,5 @@
 import { Request, Response } from 'express'
-
-const Notifications = [
-    {
-        id: 1,
-        title: "Login Alert",
-        description: "You approved a login from a new device",
-        time: "2 minutes ago",
-        type: "login",
-        seen: true,
-    },
-    {
-        id: 2,
-        title: "New friend request",
-        description: "You have a new friend requit from Samir",
-        time: "2 minutes ago",
-        type: "friend",
-        seen: false,
-    },
-    {
-        id: 3,
-        title: "Group Message",
-        description: "You have a new message from Ninja Dev's Group",
-        time: "2 minutes ago",
-        type: "message",
-        seen: true,
-    },
-    {
-        id: 4,
-        title: "Post alert",
-        description: "David posted a new article",
-        time: "2 minutes ago",
-        type: "post",
-        seen: false,
-    },
-    {
-        id: 5,
-        title: "New message",
-        description: "You have a new message from John Doe",
-        time: "2 minutes ago",
-        type: "message",
-        seen: false,
-
-    },
-    {
-        id: 6,
-        title: "New friend request",
-        description: "You have a new message from John Doe",
-        time: "2 minutes ago",
-        type: "friend",
-        seen: true,
-    },
-    {
-        id: 7,
-        title: "Birthday Reminder",
-        description: "Yusuf Iysah birthday was yesterday",
-        time: "2 days ago",
-        type: "birthday",
-        seen: false,
-    },
-    {
-        id: 8, 
-        title: "Post alert",
-        description: "BBC posted a video: 'Frozen planet' discovered ",
-        time: 'yesterday',
-        type: 'video',
-        seen: true,
-    }
-]
+import Notification from "./../model/notification.model";
 
 export const getNotifications = async (
     req: Request,
@@ -81,13 +14,18 @@ export const getNotifications = async (
     const skip = (page - 1) * limit;
     const endIndex = page * limit;
 
-    const paginatedResults = Notifications.slice(skip, endIndex);
+    const notifications = await Notification.find()
+      .sort({time: -1})
+      .skip(skip)
+      .limit(limit)
+  
+    const total = await Notification.countDocuments();
 
     const results = {
-        totalItems: Notifications.length,
+        totalItems: total,
         currentPage: page,
-        totalPages: Math.ceil(Notifications.length / limit),
-        data: paginatedResults
+        totalPages: Math.ceil(total/ limit),
+        data: notifications
     };
       
       return res
@@ -103,25 +41,26 @@ export const updateNatificationStatus = async (
     req: Request,
     res: Response,
   )=> {
-  
     try {
     const id: any = req.body.id 
     const newSeenStatus = req.body.newSeenStatus
     
-    const notification = Notifications.find(notification => notification.id === id);
+    const notification = await Notification.findOne({_id: id})
+
     if (notification) {
         notification.seen = newSeenStatus;
-        return res
+        await notification.save()
+        res
         .status(201)
-        .json({ message: 'Notification read'});
+        .json({ message: 'Notification status successfully change'});
     }else{
-        return res
+        res
         .status(201)
         .json({ message: 'Unable to read notification'});
     }
     
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Internal server error' });
+      res.status(500).json({ message: 'Internal server error' });
     }
 };
