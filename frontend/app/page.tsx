@@ -15,7 +15,7 @@ interface Notification {
   description: string;
   time: string;
   type: 'login' | 'friend' | 'message' | 'post' | 'birthday' | 'video'; // Add all possible types
-  seen: boolean;
+  seen?: boolean;
 }
 
 
@@ -35,8 +35,41 @@ export default function Home() {
   const [open, setOpen] = useState<boolean>(false); // State to control Popover
 
   // Handle notification click
-  const handleNotificationClick = (notification: Notification) => {
-    setOpen(false);
+  const handleNotificationClick = async (notification: Notification) => {
+    try {
+      // Update the notification status on the server
+      await axios.post('http://localhost:4000/api/v1/view-notification', {
+        newSeenStatus: true,
+        id: notification?._id
+      });
+
+      // Update local state optimistically
+      setNotifications(prevNotifications =>
+        prevNotifications.map(n =>
+          n?._id === notification?._id ? { ...n, seen: true } : n
+        )
+      );
+
+      // Close the popover
+      setOpen(false);
+    } catch (err) {
+      console.error('Failed to update notification status:', err);
+      // Optionally handle error (e.g., show toast notification)
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    try {
+      await Promise.all(notifications.map(n =>
+        axios.post('http://localhost:4000/api/v1/view-notification', {
+          newSeenStatus: true,
+          id: n._id
+        })
+      ));
+      setNotifications(prev => prev.map(n => ({ ...n, seen: true })));
+    } catch (err) {
+      console.error('Failed to mark all as read:', err);
+    }
   };
   
   useEffect(() => {
@@ -103,7 +136,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div>
+            <div onClick={handleMarkAllRead} className="cursor-pointer">
               <p>Mark all read</p>
             </div>
           </div>
