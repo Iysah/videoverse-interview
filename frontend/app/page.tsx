@@ -39,7 +39,7 @@ export default function Home() {
     try {
       // Update the notification status on the server
       await axios.post('http://localhost:4000/api/v1/view-notification', {
-        newSeenStatus: true,
+        newSeenStatus: false,
         id: notification?._id
       });
 

@@ -35,3 +35,7 @@ backend/
 │   └── app.ts         # Express app configuration
 ├── tsconfig.json      # TypeScript configuration
 └── package.json       # Project metadata and dependencies
+
+
+## Mongo DB URI
+MONGODB_URI=mongodb+srv://wale:DoEYI6SF9ixuzFEj@beep.89slz.mongodb.net/?retryWrites=true&w=majority&appName=beep
